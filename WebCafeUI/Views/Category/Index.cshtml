@@ -1,0 +1,185 @@
+﻿@model List<WebCafeUI.Models.Classes.Category>
+@{
+    ViewBag.Title = "Category";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="row">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Add">
+        Add Category
+    </button>
+
+
+</div>
+<table class="table table-bordered" id="table">
+    <thead>
+        <tr>
+            <td>Category id</td>
+            <td>Parent Category id</td>
+            <td>Category Name</td>
+            <td>Is it Deleted ?</td>
+            <td>Created Date</td>
+            <td>Creator User</td>
+        </tr>
+    </thead>
+
+</table>
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Add Category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-info" data-dismiss="modal">Update</button>
+                <button type="button" class="btn btn-danger deleteItem">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Add" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Add Category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Category Name</label>
+                        <input type="text" class="form-control" name="CategoryName" id="CategoryName" placeholder="Category Name">
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="addCategory">Add Category</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function AddCategory() {
+        var CName = $("#CategoryName").val();
+        var formData = { categoryName: CName };
+        $.ajax({
+            url: "/Category/AddCategory",
+            type: "POST",
+            data: formData,
+            success: function (data, textStatus, jqXHR) {
+                console.log(data)
+                if (data == 0) {
+                    toastr.error("Category", "Category Name Has been added before")
+
+                }
+                else {
+                    toastr.success("Category", "Category Added");
+                    $('#table').DataTable({
+
+                        data: data
+
+                        
+                    });
+
+
+
+                }
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                toastr.error("Category", "Couldn't added category ")
+
+            }
+        });
+    }
+
+    function GetTable(url, formData) {
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: formData,
+            success: function (data, textStatus, jqXHR) {
+
+                $('#table').DataTable({
+                    
+                    data: data,
+
+                    columns: [
+                        
+                        { "data": "id" },
+                        { "data": "ParentCategoryId" },
+                        { "data": "CategoryName" },
+                        { "data": "IsDeleted" },
+                        { "data": "CreatedDate", },
+                        { "data": "CreatorUserId" }
+                    ]
+                });
+                $('#table tbody').on('click', 'tr', function () {
+                    var value = $(this).closest('tr').children('td:first').text();
+                    $("#Modal").modal("show");
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                toastr.error("Category", "Couldn't added category ")
+
+            }
+        });
+    }
+
+    function Delete(url, formData) {
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: formData,
+            success: function (data, textStatus, jqXHR) {
+                toastr.success("Deleted", "Successfull")
+                GetTable("/Category/GetCategoryList");
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                toastr.error("Category", "Couldn't added category ")
+
+            }
+        });
+    }
+
+    $('.deleteItem').on('click', function () {
+        var value = $("#id").val();
+        var formData = { id: value };
+        Delete("/Category/DeleteCategory", formData);
+    });
+
+
+
+    document.getElementById("addCategory").addEventListener("click", AddCategory);
+
+
+
+
+    $(document).ready(() => {
+        GetTable("/Category/GetCategoryList");
+
+
+    })
+
+
+
+
+
+
+</script>

@@ -1,19 +1,10 @@
 ﻿@model WebCafeUI.Models.ViewModels.ProductViewModels
+
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Search";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if (TempData["order"] != null)
-{
-    <div class="row">
-        <div class="col" style="justify-content:center;display:flex;align-items:center;">
-            <div class="alert alert-success" role="alert">
-                @TempData["order"]
-            </div>
-        </div>
-    </div>
-}
 <div class="row">
 
 

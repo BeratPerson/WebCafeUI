@@ -1,0 +1,286 @@
+﻿@{
+    ViewBag.Title = "Product";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div ng-app="HomeApp" ng-controller="HomeController">
+
+
+    <div class="row pt-4 pb-4 " style="justify-content: space-around; display: flex; align-items: center">
+        <button type="button" class="btn btn-primary" ng-click="categoryList();ProductName=''" data-toggle="modal" data-target="#Add">
+            Add Product
+        </button>
+        <div class="col-5">
+
+            <input type="text" class="form-control" id="textbox" placeholder="Search..." />
+        </div>
+    </div>
+    <div class="row">
+
+
+
+        <table c class="table table-bordered table-striped mb-0" ng-init="GetTable()" style="height: 80px; overflow: auto; ">
+            <thead>
+                <tr>
+                    <td>Product Name</td>
+                    <td>Category</td>
+                    <td>Price</td>
+                    <td>Is it Deleted ?</td>
+                    <td>Creator User</td>
+                </tr>
+            </thead>
+            <tbody id="body">
+
+                <tr ng-repeat="e in product" ng-click="openModal(e)">
+                    <td>{{e.ProductName}}</td>
+                    <td>{{e.CategoryName}}</td>
+                    <td>{{e.Price}}</td>
+                    <td>{{e.IsDeleted}}</td>
+                    <td>{{e.Name}} {{e.SurName}}</td>
+                </tr>
+
+
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Product Name</label>
+                        <input type="text" class="form-control" name="ProductName" ng-model="ProductName" placeholder="Product Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Category</label></br>
+                        <select name="repeatSelect" id="repeatSelect" ng-model="category">
+                            <option ng-repeat="option in categories" class="form-control" value="{{option.id}}">{{option.CategoryName}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Product Price</label>
+                        <input type="text" class="form-control" name="Price" ng-model="Price" placeholder="Product Price">
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Product ImagePath</label>
+                        <input type="text" class="form-control" name="ImagePath" ng-model="ImagePath" placeholder="Product ImagePath">
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" class="form" name="ImagePath" ng-model="IsDeleted">
+                        <label for="formGroupExampleInput">Is Deleted</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" ng-click="DeleteProduct()" id="addProduct">Delete Product</button>
+                    <button type="button" class="btn btn-primary" ng-click="updateProduct()" id="addProduct">Update Product</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="Add" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Add Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body Product">
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Product Name</label>
+                        <input type="text" class="form-control" name="ProductName" ng-model="ProductName" placeholder="Product Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Category</label></br>
+                        <select ng-model="category">
+                            <option ng-repeat="option in categories" class="form-control" value="{{option.id}}">{{option.CategoryName}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Product Price</label>
+                        <input type="text" class="form-control" name="Price" ng-model="Price" placeholder="Product Price">
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Product ImagePath</label>
+                        <input type="text" class="form-control" name="ImagePath" ng-model="ImagePath" placeholder="Product ImagePath">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" ng-click="addProduct()">Add Product</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/angular.min.js"></script>
+<script>
+
+    var app = angular.module("HomeApp", []);
+
+    app.controller("HomeController", function ($scope, $http,) {
+
+        $scope.categoryList = function () {
+            var url = '/Category/GetList', data = 'parameters', config = 'contenttype';
+
+            $http.post(url, data, config).then(function (response) {
+                $scope.categories = response.data;
+
+
+            }, function (response) {
+
+                toastr.error("Error")
+
+
+            });
+        }
+        $scope.GetTable = function () {
+            var url = '/Product/GetList', data = 'parameters', config = 'contenttype';
+
+            $http.post(url, data, config).then(function (response) {
+                $scope.product = response.data;
+            }, function (response) {
+
+                toastr.error("Error")
+
+            });
+        }
+        $scope.updateProduct = function () {
+            var data = {
+                id: $scope.id,
+                ProductName: $scope.ProductName,
+                CategoryId: $scope.category,
+                IsDeleted: $scope.IsDeleted,
+                ImagePath: $scope.ImagePath
+
+            };
+            console.table(data);
+
+            $http.post('/Product/UpdateProduct', JSON.stringify(data)).then(function (response) {
+                $scope.product = response.data
+                toastr.success("Successfull")
+
+                $('#Modal').modal('hide');
+
+            }, function (response) {
+
+                $scope.msg = "Service not Exists";
+
+                $scope.statusval = response.status;
+
+                $scope.statustext = response.statusText;
+
+                $scope.headers = response.headers();
+
+            })
+
+        }
+        $scope.DeleteProduct = function () {
+            var data = {
+                id: $scope.id
+            };
+
+            $http.post('/Product/DeleteProduct', JSON.stringify(data)).then(function (response) {
+                $scope.product = response.data
+                toastr.success("Successfull")
+
+                $('#Modal').modal('hide');
+
+            }, function (response) {
+
+                $scope.msg = "Service not Exists";
+
+                $scope.statusval = response.status;
+
+                $scope.statustext = response.statusText;
+
+                $scope.headers = response.headers();
+
+            });
+
+        }
+
+        $scope.addProduct = function () {
+            var data = {
+                ProductName: $scope.ProductName,
+                CategoryId: $scope.category,
+                Price: $scope.Price,
+                ImagePath: $scope.ImagePath
+            };
+
+            $http.post('/Product/AddProduct', JSON.stringify(data)).then(function (response) {
+                if (response.data == 0) {
+                    toastr.error("Hass Ben Added Before")
+
+                }
+                else {
+                    $scope.product = response.data
+                    toastr.success("Successfull")
+                    $('#Add').modal('hide');
+                }
+
+
+            }, function (response) {
+
+                $scope.msg = "Service not Exists";
+
+                $scope.statusval = response.status;
+
+                $scope.statustext = response.statusText;
+
+                $scope.headers = response.headers();
+
+            });
+        }
+
+
+
+
+        $scope.openModal = function (Product) {
+            $scope.categoryList();
+            $scope.ProductName = Product.ProductName;
+            $scope.id = Product.id;
+
+            $scope.ImagePath = Product.ImagePath;
+            $scope.category = Product.CategoryId;
+            $scope.Price = Product.Price;
+            $scope.IsDeleted = Product.IsDeleted;
+
+            $("#Modal").modal("show");
+
+        }
+    });
+
+
+
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $("#textbox").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#body tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+
+
+
+</script>

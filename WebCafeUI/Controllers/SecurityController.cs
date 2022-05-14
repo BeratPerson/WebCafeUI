@@ -8,13 +8,13 @@ using System.Web.Mvc;
 using System.Web.Security;
 using WebCafeUI.Models.Classes;
 using WebCafeUI.Models.ContextDb;
+using WebCafeUI.Models.Entities;
 
 namespace ContactsProjectUI.Controllers
 {
     public class SecurityController : Controller
     {
         private readonly Context db = new Context();
-        private char[] observedText;
 
         public ActionResult Login()
         {
@@ -28,16 +28,19 @@ namespace ContactsProjectUI.Controllers
             if (userdb != null)
             {
                 FormsAuthentication.SetAuthCookie(userdb.UserName, false);
-
-                if (userdb.IsAdmin == true)
+                ActiveUser activeuser = new ActiveUser()
                 {
+                    id = userdb.id,
+                    Name = userdb.Name,
+                    SurName = userdb.SurName,
+                    IsAdmin = userdb.IsAdmin
+                };
+                Session.Add("CurrentUser", activeuser);
+
+                if (userdb.IsAdmin)
                     return RedirectToAction("Index", "Admin");
-
-                }
                 else
-                {
                     return RedirectToAction("Index", "Cafe");
-                }
             }
             else
             {
@@ -49,6 +52,12 @@ namespace ContactsProjectUI.Controllers
         [HttpPost]
         public ActionResult Register(User user)
         {
+            var users = db.Users.ToList();
+
+            if (users.Count==0)
+            {
+                user.IsAdmin = true;
+            }
             var userdb = db.Users.FirstOrDefault(x => x.UserName == user.UserName && x.Password == user.Password);
             if (userdb == null)
             {

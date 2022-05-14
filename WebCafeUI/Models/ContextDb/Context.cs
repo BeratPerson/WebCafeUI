@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using WebCafeUI.Models.Classes;
+using WebCafeUI.Models.Entities;
 
 namespace WebCafeUI.Models.ContextDb
 {
@@ -16,8 +17,9 @@ namespace WebCafeUI.Models.ContextDb
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductProperty> ProductProperies { get; set; }
+        public DbSet<ProductProperty> ProductPropertys { get; set; }
         public DbSet<Property> Properties { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Order> Orders { get; set; }
     }
 }

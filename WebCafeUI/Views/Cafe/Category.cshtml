@@ -4,19 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if (TempData["order"] != null)
-{
-    <div class="row">
-        <div class="col" style="justify-content:center;display:flex;align-items:center;">
-            <div class="alert alert-success" role="alert">
-                @TempData["order"]
-            </div>
-        </div>
-    </div>
-}
 <div class="row">
-
-
     <div class="col-4">
         <div class="list-group w-auto">
             @foreach (var category in Model.categories)

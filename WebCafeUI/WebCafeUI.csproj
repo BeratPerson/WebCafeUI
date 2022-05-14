@@ -50,6 +50,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.11.42.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.42\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -102,6 +105,21 @@
     <Content Include="Content\js\toastrSettings.js" />
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\AngularController\HomeAngularJs.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -109,7 +127,11 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CafeController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\ProductPropertyController.cs" />
+    <Compile Include="Controllers\PropertyController.cs" />
     <Compile Include="Controllers\SecurityController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -129,14 +151,32 @@
     <Compile Include="Migrations\202205112046249_Initial4.designer.cs">
       <DependentUpon>202205112046249_Initial4.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202205132004467_Initial5.cs" />
+    <Compile Include="Migrations\202205132004467_Initial5.designer.cs">
+      <DependentUpon>202205132004467_Initial5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205140745082_inita.cs" />
+    <Compile Include="Migrations\202205140745082_inita.designer.cs">
+      <DependentUpon>202205140745082_inita.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205141224182_inital41.cs" />
+    <Compile Include="Migrations\202205141224182_inital41.designer.cs">
+      <DependentUpon>202205141224182_inital41.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205141356226_inital42.cs" />
+    <Compile Include="Migrations\202205141356226_inital42.designer.cs">
+      <DependentUpon>202205141356226_inital42.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entities\ActiveUser.cs" />
     <Compile Include="Models\Entities\Category.cs" />
+    <Compile Include="Models\Entities\Order.cs" />
     <Compile Include="Models\Entities\Product.cs" />
     <Compile Include="Models\Entities\ProductProperty.cs" />
     <Compile Include="Models\Entities\Property.cs" />
     <Compile Include="Models\Entities\User.cs" />
     <Compile Include="Models\ContextDb\Context.cs" />
+    <Compile Include="Models\ViewModels\ProductViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -151,6 +191,15 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Security\Login.cshtml" />
     <Content Include="Views\Category\Index.cshtml" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\ProductProperty\Index.cshtml" />
+    <Content Include="Views\Property\Index.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\Cafe\Category.cshtml" />
+    <Content Include="Views\Cafe\Order.cshtml" />
+    <Content Include="Views\Cafe\Search.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -173,6 +222,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202205112046249_Initial4.resx">
       <DependentUpon>202205112046249_Initial4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205132004467_Initial5.resx">
+      <DependentUpon>202205132004467_Initial5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205140745082_inita.resx">
+      <DependentUpon>202205140745082_inita.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205141224182_inital41.resx">
+      <DependentUpon>202205141224182_inital41.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205141356226_inital42.resx">
+      <DependentUpon>202205141356226_inital42.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

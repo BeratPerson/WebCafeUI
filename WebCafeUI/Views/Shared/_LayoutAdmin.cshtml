@@ -28,7 +28,7 @@
 
     <div class="wrapper">
         @Html.Partial("_LeftSideMenuAdmin")
-        <div id="content">
+        <div id="content" style="width:100%">
             @RenderBody()
         </div>
 
@@ -97,7 +97,6 @@
             $('.full-screen').toggleClass('icon-minimize');
         }
     </script>
-
     @RenderSection("scripts", required: false)
 
 </body>

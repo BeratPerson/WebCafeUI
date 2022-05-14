@@ -1,0 +1,222 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+
+    div.widget {
+        position: relative;
+        width: 355px;
+        height: 125px;
+        background-color: #fcfdfd;
+        border-radius: 9px;
+        padding: 25px;
+        padding-right: 30px;
+        box-shadow: 0px 31px 35px -26px #080c21;
+    }
+
+    div.left-panel {
+    }
+
+    div.text {
+        font-size: 14px;
+        font-weight: bold;
+        color: rgba(0,0,0,0.5);
+    }
+
+    div.title {
+        font-size: 21px;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding-top: 5px;
+        color: rgba(0,0,0,0.7);
+    }
+
+    div.temp {
+        font-size: 81px;
+        color: rgba(0,0,0,0.9);
+        font-weight: 100;
+    }
+</style>
+<div ng-app="HomeApp" ng-controller="HomeController">
+
+
+
+    <div class="row">
+
+        <div class="widget" ng-init="GetProductsCount()">
+
+            <div class="left-panel panel">
+                <div class="title">
+                    Products Details
+                </div>
+                <div class="text">
+                    Count:
+                </div>
+
+                <div class="temp" style="display:flex;align-items:center;justify-content:center;">
+                    <img src="https://s5.postimg.cc/yzcm7htyb/image.png" alt="" width="60">
+                    <a id="productcount"></a>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="widget" ng-init="GetProductsTotalMany()">
+
+            <div class="left-panel panel">
+                <div class="title">
+                    Products Details
+                </div>
+                <div class="text">
+                    Total Many:
+                </div>
+
+                <div class="temp" style="display:flex;align-items:center;justify-content:center;">
+                    <img src="https://s5.postimg.cc/yzcm7htyb/image.png" alt="" width="60">
+                    <a id="GetProductsTotalMany"></a>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="widget" ng-init="GetOrderCount()">
+
+            <div class="left-panel panel">
+                <div class="title">
+                    Order Details
+                </div>
+                <div class="text">
+                    Count:
+                </div>
+
+                <div class="temp" style="display:flex;align-items:center;justify-content:center;">
+                    <img src="https://s5.postimg.cc/yzcm7htyb/image.png" alt="" width="60">
+                    <a id="GetOrderCount"></a>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div class="row">
+
+
+
+        <table c class="table table-bordered table-striped mb-0" ng-init="GetOrderTable()" style="height: 80px; overflow: auto;margin-top:150px ">
+
+            <thead>
+                <tr>
+                    <td style="padding:20px">Name and Surname</td>
+                    <td style="padding:20px">Mail</td>
+                    <td style="padding:20px">Phone</td>
+                    <td style="padding:20px">Message</td>
+                    <td style="padding:20px">Product </td>
+                </tr>
+            </thead>
+            <tbody id="body">
+
+                <tr ng-repeat="e in orderTable" ng-click="openModal(e)">
+                    <td>{{e.NameSurName}}</td>
+                    <td>{{e.Mail}}</td>
+                    <td>{{e.phone}}</td>
+                    <td>{{e.optional}}</td>
+                    <td>{{e.ProductName}}</td>
+                    <td><input type="button" class="btn btn-success" ng-click="complete(e)" value="Complete" /></td>
+
+                </tr>
+
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script src="~/Scripts/angular.min.js"></script>
+<script>
+    var app = angular.module("HomeApp", []);
+
+    app.controller("HomeController", function ($scope, $http,) {
+
+
+        setInterval(function () {
+            $scope.GetProductsCount();
+            $scope.GetProductsTotalMany();
+            $scope.GetOrderCount();
+            $scope.GetOrderTable();
+        }, 10000);
+
+        $scope.GetProductsCount = function () {
+            var url = '/Admin/GetProductsCount', data = 'parameters', config = 'contenttype';
+
+            $http.post(url, data, config).then(function (response) {
+                $("#productcount").html(response.data);
+            }, function (response) {
+                toastr.error("Error")
+            });
+        }
+        $scope.GetProductsTotalMany = function () {
+            var url = '/Admin/GetProductsTotalMany', data = 'parameters', config = 'contenttype';
+
+            $http.post(url, data, config).then(function (response) {
+                $("#GetProductsTotalMany").html("$" + response.data);
+            }, function (response) {
+                toastr.error("Error")
+            });
+        }
+        $scope.GetOrderCount = function () {
+            var url = '/Admin/GetOrderCount', data = 'parameters', config = 'contenttype';
+
+            $http.post(url, data, config).then(function (response) {
+                $("#GetOrderCount").html(response.data);
+            }, function (response) {
+                toastr.error("Error")
+            });
+        }
+        $scope.GetOrderTable = function () {
+            var url = '/Admin/GetOrderTable', data = 'parameters', config = 'contenttype';
+
+            $http.post(url, data, config).then(function (response) {
+                $scope.orderTable = response.data;
+            }, function (response) {
+                toastr.error("Error")
+            });
+        }
+
+        $scope.complete = function (x) {
+            var data = {
+                id: x.id,
+            };
+
+            $http.post('/Admin/CompleteOrder', JSON.stringify(data)).then(function (response) {
+                $scope.orderTable = response.data
+                toastr.success("Successfull")
+
+
+            }, function (response) {
+
+                $scope.msg = "Service not Exists";
+
+                $scope.statusval = response.status;
+
+                $scope.statustext = response.statusText;
+
+                $scope.headers = response.headers();
+
+            })
+
+        }
+
+
+
+
+    });
+</script>
+
+
+
+
+

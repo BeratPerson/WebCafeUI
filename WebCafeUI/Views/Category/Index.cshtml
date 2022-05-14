@@ -1,0 +1,246 @@
+﻿@{
+    ViewBag.Title = "Category";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div ng-app="HomeApp" ng-controller="HomeController">
+
+
+    <div class="row pt-4 pb-4 " style="justify-content: space-around; display: flex; align-items: center">
+        <button type="button" class="btn btn-primary" ng-click="CategoryName=''" data-toggle="modal" data-target="#Add">
+            Add Category
+        </button>
+        <div class="col-5">
+
+            <input type="text" class="form-control" id="textbox" placeholder="Search..." />
+        </div>
+    </div>
+    <div class="row">
+
+
+
+        <table c class="table table-bordered table-striped mb-0" ng-init="GetTable()" style="height: 80px; overflow: auto; ">
+            <thead>
+                <tr >
+                    <td style="padding:20px">Parent Category id</td>
+                    <td style="padding:20px">Category Name</td>
+                    <td style="padding:20px">Is it Deleted ?</td>
+                    <td style="padding:20px">Creator User</td>
+                </tr>
+            </thead>
+            <tbody id="body">
+
+                <tr ng-repeat="e in category" ng-click="openModal(e)">
+                    <td>{{e.ParentCategoryId}}</td>
+                    <td>{{e.CategoryName}}</td>
+                    <td>{{e.IsDeleted}}</td>
+                    <td>{{e.Name}} {{e.SurName}}</td>
+                </tr>
+
+
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Category</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <div class="modal-body">
+                    <input type="text" class="hidden" name="id" id="id">
+
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Parent Category id</label>
+                        <input type="text" class="form-control" name="ParentCategoryId" ng-model="ParentCategoryId" id="ParentCategoryId">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Category Name</label>
+                        <input type="text" class="form-control" name="CategoryName" ng-model="CategoryName" id="CategoryName" placeholder="Category Name">
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" class="form" ng-model="IsDeleted" name="IsDeleted" id="IsDeleted">
+
+                        <label for="formGroupExampleInput">Is Deleted ?</label>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" ng-click="DeleteCategory()" id="addCategory">Delete Category</button>
+                    <button type="button" class="btn btn-primary" ng-click="updateCategory()" id="addCategory">Update Category</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="Add" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Add Category</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body category">
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Category Name</label>
+                        <input type="text" class="form-control" name="CategoryName" ng-model="CategoryName" placeholder="Category Name">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" ng-click="addCategory()">Add Category</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/angular.min.js"></script>
+<script>
+
+    var app = angular.module("HomeApp", []);
+
+    app.controller("HomeController", function ($scope, $http,) {
+
+        $scope.GetTable = function () {
+            var url = '/Category/GetList', data = 'parameters', config = 'contenttype';
+
+            $http.post(url, data, config).then(function (response) {
+                $scope.category = response.data;
+                console.table(response.data)
+            }, function (response) {
+
+                toastr.error("Error")
+
+
+            });
+        }
+        $scope.updateCategory = function () {
+            var data = {
+                id: $scope.id,
+                CategoryName: $scope.CategoryName,
+
+                ParentCategoryId: $scope.ParentCategoryId,
+
+                IsDeleted: $scope.IsDeleted
+
+            };
+
+            $http.post('/Category/UpdateCategory', JSON.stringify(data)).then(function (response) {
+                console.log(response.data)
+                $scope.category = response.data
+                toastr.success("Successfull")
+
+                $('#Modal').modal('hide');
+
+            }, function (response) {
+
+                $scope.msg = "Service not Exists";
+
+                $scope.statusval = response.status;
+
+                $scope.statustext = response.statusText;
+
+                $scope.headers = response.headers();
+
+            });
+
+        }
+        $scope.DeleteCategory = function () {
+            var data = {
+                id: $scope.id
+            };
+
+            $http.post('/Category/DeleteCategory', JSON.stringify(data)).then(function (response) {
+                console.log(response.data)
+                $scope.category = response.data
+                toastr.success("Successfull")
+
+                $('#Modal').modal('hide');
+
+            }, function (response) {
+
+                $scope.msg = "Service not Exists";
+
+                $scope.statusval = response.status;
+
+                $scope.statustext = response.statusText;
+
+                $scope.headers = response.headers();
+
+            });
+
+        }
+
+        $scope.addCategory = function () {
+            var data = {
+                CategoryName: $scope.CategoryName
+            };
+
+            $http.post('/Category/Add', JSON.stringify(data)).then(function (response) {
+                if (response.data == 0) {
+                    toastr.error("Hass Ben Added Before")
+
+                }
+                else {
+                    $scope.category = response.data
+                    toastr.success("Successfull")
+                    $('#Add').modal('hide');
+                }
+
+
+            }, function (response) {
+
+                $scope.msg = "Service not Exists";
+
+                $scope.statusval = response.status;
+
+                $scope.statustext = response.statusText;
+
+                $scope.headers = response.headers();
+
+            });
+        }
+
+
+
+
+        $scope.openModal = function (category) {
+            $scope.id = category.id;
+            $scope.CategoryName = category.CategoryName;
+            $scope.ParentCategoryId = category.ParentCategoryId;
+            $scope.IsDeleted = category.IsDeleted;
+            $('#Modal').modal('show');
+        }
+    });
+
+
+
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $("#textbox").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#body tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+
+</script>

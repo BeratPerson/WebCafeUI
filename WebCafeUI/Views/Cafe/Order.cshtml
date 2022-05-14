@@ -1,0 +1,95 @@
+﻿@model WebCafeUI.Models.ViewModels.ProductViewModels
+@{
+    ViewBag.Title = "Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Order</h2>
+
+<div class="row">
+    <div class="col-4">
+        <div class="list-group w-auto">
+            <form action="/Cafe/Order" method="post">
+                @foreach (var product in Model.products)
+                {
+                    <input  class="hidden" name="productId" value="@product.id">
+
+                }
+                <div class="form-group">
+                    <label for="formGroupExampleInput">Name And SurName</label>
+                    <input type="text" class="form-control" name="NameSurName" placeholder="Name And Surname">
+                </div>
+
+                <div class="form-group">
+                    <label for="formGroupExampleInput">Phone Number</label>
+                    <input type="text" class="form-control" name="phone" placeholder="Phone Number">
+                </div>
+                <div class="form-group">
+                    <label for="formGroupExampleInput">E-Mail</label>
+                    <input type="email" class="form-control" name="Mail" placeholder="E-Mail">
+                </div>
+
+                <div class="form-group">
+                    <label for="formGroupExampleInput">wants</label>
+                    <textarea class="form-control" name="optional" placeholder="optional..."></textarea>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Order" class="form-control btn btn-success" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-8">
+
+
+
+        @foreach (var product in Model.products)
+        {
+            var dolarkur = TempData["dolar"];
+            double fiyat = product.Price * Convert.ToDouble(dolarkur);
+            <div class="row" style="background-color:wheat;height:40px;justify-content:center;display:flex;align-items:center;">
+                <div class="col" style="font-size:23px"><strong> @product.ProductName </strong></div>
+            </div>
+            <div class="row mt-5" style="background-color:white;">
+
+                <div class="col-3">
+                    <div style="height:150px;display:flex;justify-content:center;align-items:center;">
+                        <img class="" src="@product.ImagePath" alt="Card image cap" height="100%">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <table class="table table-bordered">
+
+                        @foreach (var productProperty in Model.productProperties)
+                        {
+                            if (product.id == productProperty.ProductId)
+                            {
+                                foreach (var property in Model.properties)
+                                {
+                                    if (productProperty.PropertyId == property.id)
+                                    {
+                                        <tr>
+                                            <td>@property.Key</td>
+                                            <td> @property.Value</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        }
+
+                    </table>
+                </div>
+                <div class="col-3">
+                    <div class="row p-0 m-0">
+                        <div class=" btn btn-info" style="width:100px">Tl @fiyat</div>
+                    </div>
+                    <div class="row p-0 m-0">
+                        <div class=" btn btn-success" style="width:100px"><a href="/Cafe/Order/@product.id">Order</a></div>
+
+                    </div>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>

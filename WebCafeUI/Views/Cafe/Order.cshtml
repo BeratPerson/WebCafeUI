@@ -12,7 +12,7 @@
             <form action="/Cafe/Order" method="post">
                 @foreach (var product in Model.products)
                 {
-                    <input  class="hidden" name="productId" value="@product.id">
+                    <input class="hidden" name="productId" value="@product.id">
 
                 }
                 <div class="form-group">
@@ -45,14 +45,15 @@
 
         @foreach (var product in Model.products)
         {
+
             var dolarkur = TempData["dolar"];
             double fiyat = product.Price * Convert.ToDouble(dolarkur);
-            <div class="row" style="background-color:wheat;height:40px;justify-content:center;display:flex;align-items:center;">
+            <div class="row" style="background-color: #7fbc91;color:white; height: 40px; justify-content: center; display: flex; align-items: center;">
                 <div class="col" style="font-size:23px"><strong> @product.ProductName </strong></div>
             </div>
-            <div class="row mt-5" style="background-color:white;">
+            <div class="row " style="border:1px solid #808080;padding:20px">
 
-                <div class="col-3">
+                <div class="col-5">
                     <div style="height:150px;display:flex;justify-content:center;align-items:center;">
                         <img class="" src="@product.ImagePath" alt="Card image cap" height="100%">
                     </div>
@@ -79,12 +80,14 @@
 
                     </table>
                 </div>
+
                 <div class="col-3">
                     <div class="row p-0 m-0">
-                        <div class=" btn btn-info" style="width:100px">Tl @fiyat</div>
+                        <div class=" btn btn-info" style="width:100px">TL @fiyat</div>
                     </div>
                     <div class="row p-0 m-0">
-                        <div class=" btn btn-success" style="width:100px"><a href="/Cafe/Order/@product.id">Order</a></div>
+                        <a class=" btn btn-success" style="width:100px" href="/Cafe/Order/@product.id">Order</a>
+
 
                     </div>
                 </div>

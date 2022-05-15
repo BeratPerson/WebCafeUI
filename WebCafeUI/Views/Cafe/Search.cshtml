@@ -12,7 +12,7 @@
         <div class="list-group w-auto">
             @foreach (var category in Model.categories)
             {
-                <a href="/Cafe/Index/@category.id" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+                <a href="/Cafe/Category/@category.id" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
                     <img src="https://icon-library.com/images/category-icon/category-icon-25.jpg" alt="twbs" width="32" height="32" class="rounded-circle flex-shrink-0">
                     <div class="d-flex gap-2 w-100 justify-content-between">
                         <div>
@@ -32,12 +32,12 @@
 
             var dolarkur = TempData["dolar"];
             double fiyat = product.Price * Convert.ToDouble(dolarkur);
-            <div class="row" style="background-color:wheat;height:40px;justify-content:center;display:flex;align-items:center;">
+            <div class="row" style="background-color: #7fbc91;color:white; height: 40px; justify-content: center; display: flex; align-items: center;">
                 <div class="col" style="font-size:23px"><strong> @product.ProductName </strong></div>
             </div>
-            <div class="row mt-5" style="background-color:white;">
+            <div class="row " style="border:1px solid #808080;padding:20px">
 
-                <div class="col-3">
+                <div class="col-5">
                     <div style="height:150px;display:flex;justify-content:center;align-items:center;">
                         <img class="" src="@product.ImagePath" alt="Card image cap" height="100%">
                     </div>
